@@ -1,67 +1,79 @@
-# Phase Encoding & ECC Steganography System
+# Phase Encoding Steganography with Error Correction
 
-A Python-based system that securely hides sensitive data inside digital images using **phase encoding** and protects it with **Error Correction Codes (ECC)**.  
-The aim is to combine **signal processing** and **coding theory** so that even if the stego‑image is slightly corrupted (noise, compression), the hidden data can still be detected and corrected.
+A Python research-oriented project that combines phase-based image steganography with Error Correction Codes (ECC) to improve recovery of hidden data when the stego-image is affected by errors or noise.
 
----
+## Project Summary
 
-## 🎯 Project Overview
+The workflow converts a secret message into bits, adds redundancy through ECC, embeds the encoded information into image phase data, and later extracts and decodes the message.
 
-Modern digital communication often requires hiding sensitive information in a way that is:
+## Main Components
 
-- Hard to detect (steganography).
-- Robust against noise and minor modifications.
-- Able to recover data correctly even if some bits are damaged.
+- `main.py` — orchestrates the overall workflow.
+- `enc.py` — phase-encoding steganography logic for embedding/extraction.
+- `ecc.py` — error-correction encoding and decoding logic.
+- `graph.png` — project result/analysis visualization.
 
-This project provides a complete pipeline:
+## Processing Workflow
 
-1. Convert a secret message into bits.
-2. Encode those bits with **ECC** to add redundancy and error‑correction capability.
-3. Embed the encoded bits into the **phase** of an image in the frequency domain.
-4. Reconstruct a **stego‑image** that looks almost identical to the original.
-5. Later, extract the data from the stego‑image, use ECC to correct errors, and recover the original message.
+1. Start with a secret message.
+2. Convert the message into a binary representation.
+3. Encode the binary data using ECC.
+4. Transform the cover image into the frequency domain.
+5. Modify selected phase information to embed the encoded bits.
+6. Reconstruct the stego-image.
+7. Extract the embedded information from the stego-image.
+8. Apply ECC decoding to detect/correct recoverable errors.
+9. Reconstruct the original message.
 
----
+## Technology Stack
 
-## 🧱 Technologies Used
+- Python 3.x
+- NumPy
+- OpenCV
+- Matplotlib
+- Python standard library modules used by the implementation
 
-### Languages
+## How to Run
 
-- **Python 3.x** – main implementation language.
+1. Install Python 3.
+2. Install the dependencies used by the project, for example:
 
-### Libraries & Tools
+```bash
+pip install numpy opencv-python matplotlib
+```
 
-- **NumPy** – numerical operations and array handling.
-- **OpenCV (opencv‑python)** – image loading, preprocessing, and frequency transforms (DFT/IDFT).
-- **Matplotlib** – visualization and generation of result graphs (saved as `graph.png`).
-- **Standard Library**
-  - `pickle` – serialization of data structures (if used).
-  - `argparse` / `sys` – command‑line argument parsing (if used).
-  - `csv` / `os` / `pathlib` – file handling utilities.
+3. Run the main workflow:
 
-> Update this list to match your actual `requirements.txt` (exact versions, any extra libraries like Pillow, SciPy, etc.).
+```bash
+python main.py
+```
 
-### Algorithms & Custom Modules
+The exact input files, command-line arguments, and output behavior are defined by the current implementation in `main.py`.
 
-- **Phase Encoding Steganography** (in `enc.py`)
-  - Uses frequency‑domain transforms (e.g., DFT/FFT) to separate an image into **magnitude** and **phase**.
-  - Encodes bits by carefully modifying selected **phase** components.
-  - Reconstructs the image via inverse transform to create the stego‑image.
-
-- **Error Correction Codes (ECC)** (in `ecc.py`)
-  - Custom implementation of a block code or parity‑based ECC.
-  - Adds redundancy to message bits before embedding.
-  - Detects and corrects bit errors when extracting the message from a noisy stego‑image.
-
----
-
-## 📁 Repository Structure
+## Project Structure
 
 ```text
 .
-├── LICENSE         # License for the project
-├── README.md       # Project documentation (this file)
-├── ecc.py          # Error Correction Code logic: encode/decode bit sequences
-├── enc.py          # Phase encoding steganography: embed/extract in images
-├── graph.png       # Result/analysis visualization (e.g., PSNR/BER curves or pipeline diagram)
-└── main.py         # Main script orchestrating ECC + phase encoding
+├── LICENSE
+├── README.md
+├── ecc.py
+├── enc.py
+├── graph.png
+└── main.py
+```
+
+## Key Learning Outcomes
+
+- Frequency-domain image processing
+- Phase-based steganography
+- Binary data encoding and extraction
+- Error detection and correction concepts
+- Combining multiple algorithms into one processing pipeline
+
+## Future Improvements
+
+- Add a reproducible sample dataset
+- Document ECC parameters and measurable recovery rates
+- Add automated tests
+- Provide PSNR/BER evaluation scripts
+- Add configurable embedding strength and noise experiments
