@@ -22,6 +22,11 @@ def run():
     corrected = decode(encoded)
     print("Corrected Output:", corrected)
 
+    if corrected != bits:
+        raise RuntimeError("Hamming decoder failed to recover the original four-bit message")
+
+    print("Verification: original message recovered successfully")
+
     signal = manchester(bits)
     show(signal)
     print("Graph saved as graph.png")
