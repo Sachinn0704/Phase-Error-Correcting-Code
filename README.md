@@ -27,7 +27,7 @@ The workflow converts a secret message into bits, adds redundancy through ECC, e
 
 ## Error-Correction Demonstration
 
-The current `main.py` demo accepts exactly four binary bits, encodes them with Hamming ECC, injects one random bit error, and decodes the corrupted codeword. The program then compares the decoded four-bit message with the original input and reports whether recovery succeeded.
+The current `main.py` demo accepts exactly four binary bits, encodes them with Hamming (7,4) ECC, injects one random bit error, and decodes the corrupted codeword. The program then compares the decoded four-bit message with the original input and reports whether recovery succeeded.
 
 Run it with:
 
@@ -48,6 +48,10 @@ Verification: original message recovered successfully
 ```
 
 The injected error position is randomized on each run, so the demonstration exercises the decoder against different single-bit error locations.
+
+### ECC limitation
+
+Hamming (7,4) is designed to **correct one-bit errors** in each codeword. The decoder calculates a three-bit syndrome and flips the indicated bit when an error position is detected. It should not be treated as a general multi-bit error-recovery mechanism: two or more corrupted bits in the same codeword are not guaranteed to be detected or corrected correctly.
 
 ## Technology Stack
 
@@ -94,6 +98,7 @@ The exact input files, command-line arguments, and output behavior are defined b
 - Error detection and correction concepts
 - Combining multiple algorithms into one processing pipeline
 - Verifying recovery after a simulated transmission error
+- Understanding the practical limits of single-error-correction codes
 
 ## Future Improvements
 
@@ -102,3 +107,4 @@ The exact input files, command-line arguments, and output behavior are defined b
 - Add automated tests
 - Provide PSNR/BER evaluation scripts
 - Add configurable embedding strength and noise experiments
+- Extend the demonstration to report behavior under multiple corrupted bits
