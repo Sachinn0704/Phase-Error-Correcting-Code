@@ -1,6 +1,6 @@
 import unittest
 
-from ecc import decode, encode
+from ecc import decode, decode_with_status, encode
 
 
 class TestHammingECC(unittest.TestCase):
@@ -22,6 +22,21 @@ class TestHammingECC(unittest.TestCase):
                 [1, 0, 1, 1],
                 msg=f"Failed to correct bit at position {index + 1}",
             )
+
+    def test_decode_status_reports_corrected_position(self):
+        encoded = encode("1011")
+
+        for index in range(7):
+            corrupted = encoded.copy()
+            corrupted[index] ^= 1
+            recovered, correction_position = decode_with_status(corrupted)
+            self.assertEqual(recovered, [1, 0, 1, 1])
+            self.assertEqual(correction_position, index + 1)
+
+    def test_decode_status_reports_zero_for_clean_code(self):
+        recovered, correction_position = decode_with_status(encode("1011"))
+        self.assertEqual(recovered, [1, 0, 1, 1])
+        self.assertEqual(correction_position, 0)
 
     def test_rejects_invalid_input(self):
         with self.assertRaises(ValueError):
