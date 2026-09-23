@@ -1,6 +1,6 @@
 from itertools import product
 
-from ecc import decode, encode
+from ecc import decode, decode_with_status, encode, inject_single_bit_error
 
 
 def test_all_single_bit_errors_are_corrected_for_all_messages():
@@ -12,7 +12,27 @@ def test_all_single_bit_errors_are_corrected_for_all_messages():
             corrupted = encoded.copy()
             corrupted[error_index] ^= 1
 
+            recovered, corrected_position = decode_with_status(corrupted)
+            assert recovered == list(map(int, message))
+            assert corrected_position == error_index + 1
             assert decode(corrupted) == list(map(int, message))
+
+
+def test_error_injection_is_reproducible_and_does_not_mutate_codeword():
+    encoded = encode("0101")
+    corrupted = inject_single_bit_error(encoded, 4)
+
+    assert encoded == [0, 1, 0, 0, 1, 0, 1]
+    assert corrupted == [0, 1, 0, 1, 1, 0, 1]
+
+
+def test_error_injection_rejects_invalid_position():
+    try:
+        inject_single_bit_error(encode("0101"), 8)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Expected ValueError for an out-of-range error position")
 
 
 def test_encode_rejects_invalid_message_lengths_and_values():
