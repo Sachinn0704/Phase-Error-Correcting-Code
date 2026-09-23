@@ -10,6 +10,22 @@ def encode(bits):
     return [p1, p2, d[0], p3, d[1], d[2], d[3]]
 
 
+def inject_single_bit_error(code, position):
+    """Return a copy of a Hamming codeword with one selected bit flipped.
+
+    ``position`` is one-based (1 through 7), matching the syndrome position
+    reported by :func:`decode_with_status`.
+    """
+    if len(code) != 7 or any(bit not in (0, 1) for bit in code):
+        raise ValueError("Hamming (7,4) error injection requires seven binary bits")
+    if not 1 <= position <= 7:
+        raise ValueError("Error position must be between 1 and 7")
+
+    corrupted = list(code)
+    corrupted[position - 1] ^= 1
+    return corrupted
+
+
 def decode_with_status(code):
     """Correct one-bit errors and return recovered bits plus correction metadata."""
     if len(code) != 7 or any(bit not in (0, 1) for bit in code):
